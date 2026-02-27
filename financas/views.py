@@ -27,7 +27,7 @@ def dashboard_view(request):
     hoje = date.today()
         
     transacoes = Transacao.objects.filter(
-        usuario=request.user,
+        user=request.user,
         data__month=hoje.month,
         data__year=hoje.year
     )
