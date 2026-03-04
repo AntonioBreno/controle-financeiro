@@ -6,8 +6,9 @@ from django.shortcuts import get_object_or_404, redirect, render
 from django.urls import reverse_lazy
 from django.contrib.auth.decorators import login_required
 
-from financas.forms import CategoriaForm
+from financas.forms import CategoriaForm, FormaPagamentoForm
 from financas.models.categoria import Categoria
+from financas.models.formaPagamento import FormaPagamento
 from financas.models.transacao import Transacao
 
 # Create your views here.
@@ -45,7 +46,9 @@ def dashboard_view(request):
     }
     return render(request, 'dashboard.html', context)
 
+# CRUD de Categoria
 
+@login_required
 def categoria_create(request):
     form = CategoriaForm(request.POST or None)
     
@@ -74,3 +77,34 @@ def categoria_delete(request, pk):
         return redirect('categoria_list')
     return render(request, 'categoria_confirm_delete.html', {'categoria': categoria})
         
+        
+# CRUD de Forma de Pagamento
+
+def formaPagamento_create(request):
+    
+    form = FormaPagamentoForm(request.POST or None)
+    
+    if form.is_valid():
+        form.save()
+        return redirect('formaPagamento_list')
+    return render(request, 'formaPagamento/formaPagamento_form.html', {'form': form})
+
+def formaPagamento_list(request):
+    formaPagamentos = FormaPagamento.objects.all()
+    return render(request, 'formaPagamento/formaPagamento_list.html', {'formaPagamentos': formaPagamentos}) 
+
+def formaPagamento_update(request, pk):
+    formaPagamento = get_object_or_404(FormaPagamento, pk=pk)
+    form = FormaPagamentoForm(request.POST or None, instance=formaPagamento)
+    
+    if form.is_valid():
+        form.save()
+        return redirect('formaPagamento_list')
+    return render(request, 'formaPagamento/formaPagamento_form.html', {'form': form})
+
+def formaPagamento_delete(request, pk):
+    formaPagamento = get_object_or_404(FormaPagamento, pk=pk)
+    if request.method == 'POST':
+        formaPagamento.delete()
+        return redirect('formaPagamento_list')
+    return render(request, 'formaPagamento_confirm_delete.html', {'formaPagamento': formaPagamento})

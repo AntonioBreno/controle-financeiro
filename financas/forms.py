@@ -30,7 +30,7 @@ class TransacaoForm(forms.ModelForm):
             'data': forms.DateInput(attrs={'class': 'form-control', 'type': 'date'}),
         }
         
-class formaPagamentoForm(forms.ModelForm):
+class FormaPagamentoForm(forms.ModelForm):
     class Meta:
         model = FormaPagamento
         fields = ['nome']
