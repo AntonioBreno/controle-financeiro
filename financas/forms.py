@@ -1,8 +1,8 @@
-
-
 from django import forms
 
+
 from financas.models.categoria import Categoria
+from financas.models.formaPagamento import FormaPagamento
 from financas.models.transacao import Transacao
 
 
@@ -20,7 +20,7 @@ class CategoriaForm(forms.ModelForm):
 class TransacaoForm(forms.ModelForm):
     class Meta:
         model = Transacao
-        fields = ['categoria', 'tipo', 'valor', 'descricao', 'data', 'criado_em']
+        fields = ['categoria', 'tipo', 'valor', 'descricao', 'data']
         
         widgets = {
             'categoria': forms.Select(attrs={'class': 'form-control'}),
@@ -28,12 +28,11 @@ class TransacaoForm(forms.ModelForm):
             'valor': forms.NumberInput(attrs={'class': 'form-control'}),
             'descricao': forms.TextInput(attrs={'class': 'form-control'}),
             'data': forms.DateInput(attrs={'class': 'form-control', 'type': 'date'}),
-            'criado_em': forms.DateTimeInput(attrs={'class': 'form-control', 'type': 'datetime-local'}),
         }
         
 class formaPagamentoForm(forms.ModelForm):
     class Meta:
-        model = Categoria
+        model = FormaPagamento
         fields = ['nome']
         
         widgets = {

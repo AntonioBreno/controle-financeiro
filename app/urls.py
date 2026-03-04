@@ -1,5 +1,5 @@
 from django.contrib import admin
-from django.urls import path
+from django.urls import include, path
 from django.contrib.auth import views as auth_views
 
 from financas.views import CustomLoginView
@@ -7,6 +7,7 @@ from financas.views import dashboard_view
 
 urlpatterns = [
     path('admin/', admin.site.urls),
+    path('financas/', include('financas.urls')),
     
     path('dashboard/', dashboard_view, name='dashboard'),
     path('login/', CustomLoginView.as_view(), name='login'),

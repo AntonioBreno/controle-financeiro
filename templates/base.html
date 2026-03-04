@@ -49,11 +49,11 @@
         <aside class="sidebar" id="sidebar">
             <nav>
                 <ul>
-                    <li><a href="#">Dashboard</a></li>
-                    <li><a href="#">Receitas</a></li>
-                    <li><a href="#">Despesas</a></li>
-                    <li><a href="#">Relatórios</a></li>
-                    <li><a href="#">Logout</a></li>
+                    <li><a href="{% url 'dashboard' %}">Home</a></li>
+                    <li><a href="#">Movimentação</a></li>
+                    <li><a href="{% url 'categoria_list' %}">Categoria</a></li>
+                    <li><a href="#">Forma de Pagamento</a></li>
+                    
                 </ul>
             </nav>
         </aside>

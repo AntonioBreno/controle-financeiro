@@ -2,10 +2,12 @@ from datetime import date
 
 from django.db.models import Sum
 from django.contrib.auth.views import LoginView
-from django.shortcuts import redirect, render
+from django.shortcuts import get_object_or_404, redirect, render
 from django.urls import reverse_lazy
 from django.contrib.auth.decorators import login_required
 
+from financas.forms import CategoriaForm
+from financas.models.categoria import Categoria
 from financas.models.transacao import Transacao
 
 # Create your views here.
@@ -44,5 +46,31 @@ def dashboard_view(request):
     return render(request, 'dashboard.html', context)
 
 
+def categoria_create(request):
+    form = CategoriaForm(request.POST or None)
+    
+    if form.is_valid():
+        form.save()
+        return redirect('categoria_list')
+    return render(request, 'categoria/categoria_form.html', {'form': form})
 
+def categoria_list(request):
+    categorias = Categoria.objects.all()
+    return render(request, 'categoria/categoria_list.html', {'categorias': categorias})
+
+def categoria_update(request, pk):
+    categoria = get_object_or_404(Categoria, pk=pk)
+    form = CategoriaForm(request.POST or None, instance=categoria)
+    
+    if form.is_valid():
+        form.save()
+        return redirect('categoria_list')
+    return render(request, 'categoria/categoria_form.html', {'form': form})
+
+def categoria_delete(request, pk):
+    categoria = get_object_or_404(Categoria, pk=pk)
+    if request.method == 'POST':
+        categoria.delete()
+        return redirect('categoria_list')
+    return render(request, 'categoria_confirm_delete.html', {'categoria': categoria})
         
