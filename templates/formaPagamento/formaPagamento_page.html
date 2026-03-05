@@ -1,0 +1,23 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<h2>Nova Forma de Pagamento</h2>
+
+<form method="POST">
+    {% csrf_token %}
+    {{ form.as_p }}
+    <button type="submit" class="btn btn-success">Salvar</button>
+</form>
+
+<hr>
+
+<h2>Lista de Formas de Pagamento</h2>
+
+<ul>
+    {% for formaPagamento in formaPagamentos %}
+        <li>{{ formaPagamento.nome }}</li>
+    {% empty %}
+        <li>Nenhuma forma de pagamento cadastrada.</li>
+    {% endfor %}
+</ul>
+{% endblock %}

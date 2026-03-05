@@ -1,6 +1,15 @@
 {% extends 'base.html' %}
 
 {% block content %}
+<h2>Nova Categoria</h2>
+
+<form method="POST">
+    {% csrf_token %}
+    {{ form.as_p }}
+    <button type="submit" class="btn btn-success">Salvar</button>
+</form>
+
+<hr>
 
 <h2>Lista de Categorias</h2>
 
@@ -11,9 +20,4 @@
         <li>Nenhuma categoria cadastrada.</li>
     {% endfor %}
 </ul>
-
-<a href="{% url 'categoria_create' %}" class="btn btn-primary mt-3">
-    Nova Categoria
-</a>
-
 {% endblock %}
