@@ -13,4 +13,10 @@ urlpatterns = [
     path('formasPagamento/', views.formaPagamento_list_create, name='formaPagamento_list_create'),
     path('update/<int:pk>/', views.formaPagamento_update, name='formaPagamento_update'),
     path('delete/<int:pk>/', views.formaPagamento_delete, name='formaPagamento_delete'),
+    
+    path('transacao/', views.transacao_list_create, name='transacao_list_create'),
+    path('transacoes/<int:pk>/', views.transacao_detail, name='transacao_detail'),
+    path('update/<int:pk>/', views.transacao_update, name='transacao_update'),
+    path('delete/<int:pk>/', views.transacao_delete, name='transacao_delete'),
+
 ]

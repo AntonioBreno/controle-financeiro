@@ -20,11 +20,11 @@ class CategoriaForm(forms.ModelForm):
 class TransacaoForm(forms.ModelForm):
     class Meta:
         model = Transacao
-        fields = ['categoria', 'tipo', 'valor', 'descricao', 'data']
+        fields = ['tipo','categoria', 'valor', 'descricao', 'data']
         
         widgets = {
-            'categoria': forms.Select(attrs={'class': 'form-control'}),
             'tipo': forms.Select(attrs={'class': 'form-control'}),
+            'categoria': forms.Select(attrs={'class': 'form-control'}),
             'valor': forms.NumberInput(attrs={'class': 'form-control'}),
             'descricao': forms.TextInput(attrs={'class': 'form-control'}),
             'data': forms.DateInput(attrs={'class': 'form-control', 'type': 'date'}),

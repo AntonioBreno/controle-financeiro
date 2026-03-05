@@ -6,7 +6,7 @@ from django.shortcuts import get_object_or_404, redirect, render
 from django.urls import reverse_lazy
 from django.contrib.auth.decorators import login_required
 
-from financas.forms import CategoriaForm, FormaPagamentoForm
+from financas.forms import CategoriaForm, FormaPagamentoForm, TransacaoForm
 from financas.models.categoria import Categoria
 from financas.models.formaPagamento import FormaPagamento
 from financas.models.transacao import Transacao
@@ -165,3 +165,72 @@ def formaPagamento_delete(request, pk):
         'formaPagamento_confirm_delete.html',
         {'formaPagamento': formaPagamento}
     )
+    
+# CRUD de Transação 
+@login_required
+def transacao_list_create(request):
+    
+    transacao = Transacao.objects.filter(
+        user=request.user
+    ).order_by('-id')
+    
+    if request.method == "POST":
+        form = TransacaoForm(request.POST)
+        if form.is_valid():
+            transacao = form.save(commit=False)
+            transacao.user = request.user  
+            transacao.save()
+            return redirect('transacao_list_create')
+    else:
+        form = TransacaoForm()
+
+    context = {
+        'form': form,
+        'transacao': transacao
+    }
+
+    return render(request, 'transacao/transacao_page.html', context)
+
+@login_required
+def transacao_detail(request, pk):
+    transacao = get_object_or_404(
+        Transacao,
+        pk=pk,
+        user=request.user  
+    )
+
+    return render(
+        request,
+        'transacao/transacao_detail.html',
+        {'transacao': transacao}
+    )
+
+@login_required
+def transacao_update(request, pk):
+    transacao = get_object_or_404(
+        Transacao,
+        pk=pk,
+        user=request.user
+    )
+
+    form = TransacaoForm(request.POST or None, instance=transacao)
+
+    if form.is_valid():
+        form.save()
+        return redirect('transacao_list_create')
+
+    return render(request, 'transacao/transacao_form.html', {'form': form})
+
+@login_required
+def transacao_delete(request, pk):
+    transacao = get_object_or_404(
+        Transacao,
+        pk=pk,
+        user=request.user
+    )
+
+    if request.method == 'POST':
+        transacao.delete()
+        return redirect('transacao_list_create')
+
+    return render(request, 'transacao_confirm_delete.html', {'transacao': transacao})

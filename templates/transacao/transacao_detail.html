@@ -1,0 +1,17 @@
+{% extends 'base.html' %}
+
+{% block content %}
+
+<h2>Detalhes da Transação</h2>
+
+<p><strong>Tipo:</strong> {{ transacao.tipo }}</p>
+<p><strong>Categoria:</strong> {{ transacao.categoria }}</p>
+<p><strong>Valor:</strong> R$ {{ transacao.valor }}</p>
+<p><strong>Descrição:</strong> {{ transacao.descricao }}</p>
+<p><strong>Data:</strong> {{ transacao.data }}</p>
+
+<a href="{% url 'transacao_list_create' %}" class="btn btn-secondary">
+    Voltar
+</a>
+
+{% endblock %}
