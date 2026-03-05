@@ -1,0 +1,13 @@
+{% extends 'base.html' %}
+
+{% block content %}
+
+<h2>Detalhes da Forma de Pagamento</h2>
+
+<p><strong>Nome:</strong> {{ formaPagamento.nome }}</p>
+
+<a href="{% url 'formaPagamento_list_create' %}" class="btn btn-secondary">
+    Voltar
+</a>
+
+{% endblock %}

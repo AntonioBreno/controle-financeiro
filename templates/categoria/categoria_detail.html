@@ -1,0 +1,13 @@
+{% extends 'base.html' %}
+
+{% block content %}
+
+<h2>Detalhes da Categoria</h2>
+
+<p><strong>Nome:</strong> {{ categoria.nome }}</p>
+
+<a href="{% url 'categoria_list_create' %}" class="btn btn-secondary">
+    Voltar
+</a>
+
+{% endblock %}

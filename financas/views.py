@@ -127,6 +127,20 @@ def formaPagamento_list_create(request):
     return render(request, 'formaPagamento/formaPagamento_page.html', context) 
 
 @login_required
+def formaPagamento_detail(request, pk):
+    formaPagamento = get_object_or_404(
+        FormaPagamento,
+        pk=pk,
+        user=request.user  
+    )
+    
+    return render(
+        request,
+        'formaPagamento/formaPagamento_detail.html',
+        {'formaPagamento': formaPagamento}
+    )
+
+@login_required
 def formaPagamento_update(request, pk):
     
     formaPagamento = get_object_or_404(
@@ -234,3 +248,73 @@ def transacao_delete(request, pk):
         return redirect('transacao_list_create')
 
     return render(request, 'transacao_confirm_delete.html', {'transacao': transacao})
+
+
+# CRUD de Categoria 
+@login_required
+def categoria_list_create(request):
+    
+    categoria = Categoria.objects.filter(
+        user=request.user
+    ).order_by('-id')
+    
+    if request.method == "POST":
+        form = CategoriaForm(request.POST)
+        if form.is_valid():
+            categoria = form.save(commit=False)
+            categoria.user = request.user  
+            categoria.save()
+            return redirect('categoria_list_create')
+    else:
+        form = CategoriaForm()
+
+    context = {
+        'form': form,
+        'categoria': categoria
+    }
+
+    return render(request, 'categoria/categoria_page.html', context)
+
+@login_required
+def categoria_detail(request, pk):
+    categoria = get_object_or_404(
+        Categoria,
+        pk=pk,
+        user=request.user  
+    )
+
+    return render(
+        request,
+        'categoria/categoria_detail.html',
+        {'categoria': categoria}
+    )
+
+@login_required
+def categoria_update(request, pk):
+    categoria = get_object_or_404(
+        Categoria,
+        pk=pk,
+        user=request.user
+    )
+
+    form = CategoriaForm(request.POST or None, instance=categoria)
+
+    if form.is_valid():
+        form.save()
+        return redirect('categoria_list_create')
+
+    return render(request, 'categoria/categoria_form.html', {'form': form})
+
+@login_required
+def categoria_delete(request, pk):
+    categoria = get_object_or_404(
+        Categoria,
+        pk=pk,
+        user=request.user
+    )
+
+    if request.method == 'POST':
+        categoria.delete()
+        return redirect('categoria_list_create')
+
+    return render(request, 'categoria/categoria_confirm_delete.html', {'categoria': categoria})
