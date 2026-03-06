@@ -2,6 +2,7 @@ from datetime import date
 
 from django.db.models import Sum
 from django.contrib.auth.views import LoginView
+from django.http import JsonResponse
 from django.shortcuts import get_object_or_404, redirect, render
 from django.urls import reverse_lazy
 from django.contrib.auth.decorators import login_required
@@ -190,6 +191,10 @@ def transacao_list_create(request):
     
     if request.method == "POST":
         form = TransacaoForm(request.POST)
+
+        # FILTRA AS CATEGORIAS DO USUÁRIO
+        form.fields['categoria'].queryset = Categoria.objects.filter(user=request.user)
+
         if form.is_valid():
             transacao = form.save(commit=False)
             transacao.user = request.user  
@@ -197,6 +202,9 @@ def transacao_list_create(request):
             return redirect('transacao_list_create')
     else:
         form = TransacaoForm()
+
+        # FILTRA AS CATEGORIAS DO USUÁRIO
+        form.fields['categoria'].queryset = Categoria.objects.filter(user=request.user)
 
     context = {
         'form': form,
@@ -318,3 +326,13 @@ def categoria_delete(request, pk):
         return redirect('categoria_list_create')
 
     return render(request, 'categoria/categoria_confirm_delete.html', {'categoria': categoria})
+
+@login_required
+def categoria_valor(request, pk):
+    categoria = get_object_or_404(Categoria, pk=pk, user=request.user)
+
+    data = {
+        'valor_padrao': categoria.valor_padrao
+    }
+
+    return JsonResponse(data)

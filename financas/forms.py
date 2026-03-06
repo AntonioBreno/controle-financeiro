@@ -16,6 +16,13 @@ class CategoriaForm(forms.ModelForm):
             'valor_padrao': forms.NumberInput(attrs={'class': 'form-control'}),
         }
         
+    def __init__(self, *args, **kwargs):
+        user = kwargs.pop('user', None)  # remove user dos kwargs
+        super().__init__(*args, **kwargs)
+
+        if user:
+            self.fields['categoria'].queryset = Categoria.objects.filter(user=user)
+        
         
 class TransacaoForm(forms.ModelForm):
     class Meta:

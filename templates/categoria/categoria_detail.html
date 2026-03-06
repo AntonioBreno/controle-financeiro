@@ -5,6 +5,7 @@
 <h2>Detalhes da Categoria</h2>
 
 <p><strong>Nome:</strong> {{ categoria.nome }}</p>
+<p><strong>Valor Padrão:</strong> R$ {{ categoria.valor_padrao }}</p>
 
 <a href="{% url 'categoria_list_create' %}" class="btn btn-secondary">
     Voltar
