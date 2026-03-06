@@ -66,6 +66,7 @@
 {% block scripts %}
 <script>
 
+    // Preenche o campo valor com o valor padrão da categoria selecionada
     document.addEventListener("DOMContentLoaded", function () {
         console.log("JS carregou")
         document.getElementById("id_categoria").addEventListener("change", function () {
@@ -87,6 +88,40 @@
         })
 
     })
+
+    // Atualiza as categorias disponíveis com base no tipo selecionado
+
+    document.addEventListener("DOMContentLoaded", function () {
+
+    let tipoSelect = document.getElementById("id_tipo")
+    let categoriaSelect = document.getElementById("id_categoria")
+
+    tipoSelect.addEventListener("change", function () {
+
+        let tipo = this.value
+
+        fetch(`/financas/categorias/tipo/${tipo}/`)
+        .then(response => response.json())
+        .then(data => {
+
+            categoriaSelect.innerHTML = ""
+
+            data.forEach(function(categoria){
+
+                let option = document.createElement("option")
+                option.value = categoria.id
+                option.text = categoria.nome
+
+                categoriaSelect.appendChild(option)
+
+            })
+
+        })
+
+    })
+
+})
+
 
 </script>
 {% endblock %}

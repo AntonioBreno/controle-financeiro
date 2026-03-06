@@ -9,10 +9,11 @@ from financas.models.transacao import Transacao
 class CategoriaForm(forms.ModelForm):
     class Meta:
         model = Categoria
-        fields = ['nome', 'valor_padrao']
+        fields = ['nome', 'tipo', 'valor_padrao']
         
         widgets = {
             'nome': forms.TextInput(attrs={'class': 'form-control'}),
+            'tipo': forms.Select(attrs={'class': 'form-control'}),
             'valor_padrao': forms.NumberInput(attrs={'class': 'form-control'}),
         }
         

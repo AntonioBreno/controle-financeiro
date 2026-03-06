@@ -7,6 +7,7 @@ urlpatterns = [
     
     # Categoria URLs
     path('categoria/valor/<int:pk>/', views.categoria_valor, name='categoria_valor'),
+    path('categorias/tipo/<str:tipo>/', views.categorias_por_tipo, name='categorias_por_tipo'),
     path('categorias/', views.categoria_list_create, name='categoria_list_create'),
     path('categorias/<int:pk>/', views.categoria_detail, name='categoria_detail'),
     path('update/<int:pk>/', views.categoria_update, name='categoria_update'),

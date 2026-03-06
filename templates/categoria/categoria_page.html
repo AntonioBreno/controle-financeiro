@@ -20,6 +20,7 @@
         <thead class="text-white" style="background-color: #07b29b;"> <!-- Bootstrap verde escuro -->
             <tr>
                 <th>Nome</th>
+                <th>Tipo</th>
                 <th>Valor Padrão</th>
             </tr>
         </thead>
@@ -29,6 +30,7 @@
                 class="{% if forloop.counter|divisibleby:2 %}linha-verde{% else %}linha-branca{% endif %}"
                 title="Ver detalhes">
                 <td>{{ categoria.nome }}</td>
+                <td>{{ categoria.tipo }}</td>
                 <td>{{ categoria.valor_padrao }}</td>
             </tr>
             {% empty %}

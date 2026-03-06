@@ -336,3 +336,21 @@ def categoria_valor(request, pk):
     }
 
     return JsonResponse(data)
+
+@login_required
+def categorias_por_tipo(request, tipo):
+
+    categorias = Categoria.objects.filter(
+        user=request.user,
+        tipo=tipo
+    )
+
+    data = []
+
+    for categoria in categorias:
+        data.append({
+            "id": categoria.id,
+            "nome": categoria.nome
+        })
+
+    return JsonResponse(data, safe=False)
