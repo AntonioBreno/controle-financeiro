@@ -5,11 +5,12 @@
 <head>
     <meta charset="UTF-8">
     <title>Sistema Financeiro</title>
-    <link rel="stylesheet" href="{% static 'css/style.css' %}">
+    
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css" rel="stylesheet"
         integrity="sha384-sRIl4kxILFvY47J16cr9ZwB07vP4J8+LH7qKQnuqkuIAvNWLzeN8tE5YBujZqJLB" crossorigin="anonymous">
-        <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.13.1/font/bootstrap-icons.min.css">
-        
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.13.1/font/bootstrap-icons.min.css">
+    <link rel="stylesheet" href="{% static 'css/style.css' %}">
+
 
 </head>
 
@@ -25,20 +26,18 @@
                 <input class="form-control me-2" type="search" placeholder="Search" aria-label="Search" />
                 <button class="btn btn-light" type="submit"><i class="bi bi-search"></i></button>
             </form>
-            <nav class="ms-auto"> 
+            <nav class="ms-auto">
                 <div class="dropdown">
-                    <button class="btn btn-secondary " type="button" data-bs-toggle="dropdown"
-                        aria-expanded="false">
+                    <button class="btn btn-secondary " type="button" data-bs-toggle="dropdown" aria-expanded="false">
                         {{ user.username }}
                     </button>
                     <ul class="dropdown-menu">
                         <li><a class="dropdown-item" href="#">Action</a></li>
                         <li><a class="dropdown-item" href="#">Another action</a></li>
                         <li>
-                            <a class="dropdown-item" href="#">
-                                <form method="post" action="{% url 'logout' %}">{% csrf_token %}<button type="submit"
-                                        class="btn btn-link">Sair</button></form>
-                            </a>
+                            <form method="post" action="{% url 'logout' %}">{% csrf_token %}<button type="submit"
+                                    class="btn btn-link">Sair</button></form>
+
                         </li>
                     </ul>
                 </div>
@@ -50,16 +49,16 @@
             <nav>
                 <ul>
                     <li><a href="{% url 'dashboard' %}">Home</a></li>
-                    <li><a href="{% url 'transacao_list_create' %}">Movimentação</a></li>
+                    <li><a href="{% url 'transacao_list_create' %}">Transações</a></li>
                     <li><a href="{% url 'categoria_list_create' %}">Categoria</a></li>
                     <li><a href="{% url 'formaPagamento_list_create' %}">Forma de Pagamento</a></li>
-                    
+
                 </ul>
             </nav>
         </aside>
 
         <main class="content">
-            <div class="w-75 mx-auto">
+            <div class="">
                 {% block content%}
 
                 {% endblock %}
