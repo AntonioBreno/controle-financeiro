@@ -30,20 +30,52 @@ def dashboard_view(request):
         
     hoje = date.today()
         
+    mes = int(request.GET.get('mes', hoje.month))
+    ano = int(request.GET.get('ano', hoje.year))
+    
+    mes_anterior = mes - 1
+    ano_anterior = ano
+
+    if mes_anterior == 0:
+        mes_anterior = 12
+        ano_anterior -= 1
+        
     transacoes = Transacao.objects.filter(
         user=request.user,
-        data__month=hoje.month,
-        data__year=hoje.year
+        data__month=mes,
+        data__year=ano
     )
+    
+    transacoes_anterior = Transacao.objects.filter(
+    user=request.user,
+    data__month=mes_anterior,
+    data__year=ano_anterior
+)
         
     total_receita = transacoes.filter(tipo='receita').aggregate(Sum('valor'))['valor__sum'] or 0
     total_despesa = transacoes.filter(tipo='despesa').aggregate(Sum('valor'))['valor__sum'] or 0
     saldo = total_receita - total_despesa
-        
+    
+    receita_anterior = transacoes_anterior.filter(tipo='receita').aggregate(Sum('valor'))['valor__sum'] or 0
+    despesa_anterior = transacoes_anterior.filter(tipo='despesa').aggregate(Sum('valor'))['valor__sum'] or 0
+    saldo_anterior = receita_anterior - despesa_anterior
+    
+    def calcular_percentual(atual, anterior):
+        if anterior == 0:
+            return 0
+        return round(((atual - anterior) / anterior) * 100, 1)
+
+    percentual_receita = calcular_percentual(total_receita, receita_anterior)
+    percentual_despesa = calcular_percentual(total_despesa, despesa_anterior)
+    percentual_saldo = calcular_percentual(saldo, saldo_anterior)
+    
     context = {
         'total_receita': total_receita,
         'total_despesa': total_despesa,
-        'saldo': saldo
+        'saldo': saldo,
+        'percentual_receita': percentual_receita,
+        'percentual_despesa': percentual_despesa,
+        'percentual_saldo': percentual_saldo,    
     }
     return render(request, 'dashboard.html', context)
 

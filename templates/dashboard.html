@@ -1,5 +1,7 @@
 {% extends 'base.html' %}
 {% load static %}
+{% load humanize %}
+{% load moeda %}
 
 
 {% block content %}
@@ -18,12 +20,15 @@
         </div>
         <div class="d-flex flex-column">
           <h6 class="card-subtitle  text-body-secondary">Receita mensal</h6>
-          <h5 class="mb-0">R$1400 </h5>
+          <h5 class="mb-0">{{ total_receita|moeda }}</h5>
         </div>
 
       </div>
-
-      <p class="card-subtitle text-body-secondary fs-7">Aumento de 50% neste mes</p>
+      {% if percentual_receita < 0 %}
+        <p class="card-subtitle text-body-secondary fs-7 text-danger">Redução de {{ percentual_receita }}% neste mes</p>
+      {% else %}
+        <p class="card-subtitle text-body-secondary fs-7">Aumento de {{ percentual_receita }}% neste mes</p>
+      {% endif %}
 
     </div>
   </div>
@@ -37,12 +42,15 @@
         </div>
         <div class="d-flex flex-column">
           <h6 class="card-subtitle  text-body-secondary">Dispesa mensal</h6>
-          <h5 class="mb-0">R$1400 </h5>
+          <h5 class="mb-0">{{ total_despesa|moeda }}</h5>
         </div>
 
       </div>
-
-      <p class="card-subtitle text-body-secondary fs-7">Aumento de 50% neste mes</p>
+      {% if percentual_despesa < 0 %}
+        <p class="card-subtitle text-body-secondary fs-7 text-success">Redução de {{ percentual_despesa }}% neste mes</p>
+      {% else %}
+        <p class="card-subtitle text-body-secondary fs-7 text-danger">Aumento de {{ percentual_despesa }}% neste mes</p>
+      {% endif %}
 
     </div>
   </div>
@@ -51,17 +59,20 @@
     <div class="card-body ">
       <div class="d-flex gap-2 align-items-center mb-3">
 
-        <div class=" bg-success text-white icon-box">
+        <div class=" bg-primary text-white icon-box">
           <i class="bi bi-piggy-bank"></i>
         </div>
         <div class="d-flex flex-column">
           <h6 class="card-subtitle  text-body-secondary">Saldo</h6>
-          <h5 class="mb-0">R$1400 </h5>
+          <h5 class="mb-0">{{ saldo|moeda }}</h5>
         </div>
 
       </div>
-
-      <p class="card-subtitle text-body-secondary fs-7">Aumento de 50% neste mes</p>
+      {% if percentual_saldo < 0 %}
+        <p class="card-subtitle text-body-secondary fs-7 text-danger">Redução de {{ percentual_saldo }}% neste mes</p>
+      {% else %}
+        <p class="card-subtitle text-body-secondary fs-7">Aumento de {{ percentual_saldo }}% neste mes</p>
+      {% endif %}
 
     </div>
   </div>
@@ -87,4 +98,8 @@
 
 </div>
 
-{% endblock %}
+<div>
+  
+</div>
+
+{% endblock %}''
