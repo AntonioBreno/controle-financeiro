@@ -24,11 +24,11 @@
         </div>
 
       </div>
-      {% if percentual_receita < 0 %}
-        <p class="card-subtitle text-body-secondary fs-7 text-danger">Redução de {{ percentual_receita }}% neste mes</p>
-      {% else %}
+      {% if percentual_receita < 0 %} <p class="card-subtitle text-body-secondary fs-7 text-danger">Redução de {{
+        percentual_receita }}% neste mes</p>
+        {% else %}
         <p class="card-subtitle text-body-secondary fs-7">Aumento de {{ percentual_receita }}% neste mes</p>
-      {% endif %}
+        {% endif %}
 
     </div>
   </div>
@@ -46,11 +46,11 @@
         </div>
 
       </div>
-      {% if percentual_despesa < 0 %}
-        <p class="card-subtitle text-body-secondary fs-7 text-success">Redução de {{ percentual_despesa }}% neste mes</p>
-      {% else %}
+      {% if percentual_despesa < 0 %} <p class="card-subtitle text-body-secondary fs-7 text-success">Redução de {{
+        percentual_despesa }}% neste mes</p>
+        {% else %}
         <p class="card-subtitle text-body-secondary fs-7 text-danger">Aumento de {{ percentual_despesa }}% neste mes</p>
-      {% endif %}
+        {% endif %}
 
     </div>
   </div>
@@ -68,11 +68,11 @@
         </div>
 
       </div>
-      {% if percentual_saldo < 0 %}
-        <p class="card-subtitle text-body-secondary fs-7 text-danger">Redução de {{ percentual_saldo }}% neste mes</p>
-      {% else %}
+      {% if percentual_saldo < 0 %} <p class="card-subtitle text-body-secondary fs-7 text-danger">Redução de {{
+        percentual_saldo }}% neste mes</p>
+        {% else %}
         <p class="card-subtitle text-body-secondary fs-7">Aumento de {{ percentual_saldo }}% neste mes</p>
-      {% endif %}
+        {% endif %}
 
     </div>
   </div>
@@ -98,8 +98,28 @@
 
 </div>
 
-<div>
-  
+<div class="mt-3">
+  <form class="d-flex gap-3" method="POST">
+    {% csrf_token %}
+    <p>
+      <label for="descricao">Descrição:</label>
+      {{ form.descricao }}
+    </p>
+    <p>
+      <label for="valor">Valor:</label>
+      {{ form.valor }}
+    </p>
+    <p>
+      <label for="categoria">Categoria:</label>
+      {{ form.categoria }}
+    </p>
+    <p>
+      <label for="tipo">Tipo:</label>
+      {{ form.tipo }}
+    </p>
+
+    <button type="submit" class="btn btn-success">Salvar</button>
+  </form>
 </div>
 
 {% endblock %}''

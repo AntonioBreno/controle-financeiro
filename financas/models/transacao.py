@@ -1,3 +1,5 @@
+from datetime import date
+
 from django.conf import settings
 from django.db import models
 from django.contrib.auth.models import User
@@ -14,7 +16,7 @@ class Transacao(models.Model):
     tipo = models.CharField(max_length=10, choices=TIPO_CHOICES)
     valor = models.DecimalField(max_digits=10, decimal_places=2)
     descricao = models.CharField(max_length=255)
-    data = models.DateField()
+    data = models.DateField(default=date.today)
     criado_em = models.DateTimeField(auto_now_add=True)
 
     def __str__(self):

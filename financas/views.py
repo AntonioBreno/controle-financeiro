@@ -27,6 +27,15 @@ class CustomLoginView(LoginView):
     
 @login_required
 def dashboard_view(request):
+    
+    form = TransacaoForm(request.POST or None)
+    
+    if form.is_valid():
+        transacao = form.save(commit=False)
+        transacao.user = request.user
+        transacao.save()
+        return redirect('dashboard')
+    
         
     hoje = date.today()
         
@@ -70,6 +79,7 @@ def dashboard_view(request):
     percentual_saldo = calcular_percentual(saldo, saldo_anterior)
     
     context = {
+        'form': form,
         'total_receita': total_receita,
         'total_despesa': total_despesa,
         'saldo': saldo,
