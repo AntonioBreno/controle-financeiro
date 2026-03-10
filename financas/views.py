@@ -28,14 +28,21 @@ class CustomLoginView(LoginView):
 @login_required
 def dashboard_view(request):
     
+    transacao = Transacao.objects.filter(
+        user=request.user
+    ).order_by('-id')
+    
     form = TransacaoForm(request.POST or None)
     
-    if form.is_valid():
-        transacao = form.save(commit=False)
-        transacao.user = request.user
-        transacao.save()
-        return redirect('dashboard')
-    
+    if request.method == "POST":
+        form = TransacaoForm(request.POST)
+        if form.is_valid():
+            transacao = form.save(commit=False)
+            transacao.user = request.user
+            transacao.save()
+            return redirect('dashboard')
+    else:
+        form = TransacaoForm()
         
     hoje = date.today()
         
@@ -80,6 +87,7 @@ def dashboard_view(request):
     
     context = {
         'form': form,
+        'transacao': transacao,
         'total_receita': total_receita,
         'total_despesa': total_despesa,
         'saldo': saldo,
