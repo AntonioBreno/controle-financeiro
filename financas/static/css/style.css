@@ -6,6 +6,55 @@
   font-family: Arial, sans-serif;
 }
 
+:root{
+
+  --app-text-primary: #212529;
+  --app-text-secondary: #848484;
+  --app-text-muted:#afafaf;
+
+  --primary-green: #2F6F66;
+  --primary-green-light: #B6E388;
+
+  --app-bg-body:#fefefe;
+  --bg-page: #F5F7F9;
+  --app-bg-card: #fafafa;
+
+
+
+  --app-font-sm: 0.8rem;
+  --app-font-md: 1.1rem;
+}
+
+/*.app-text-secundary {
+  color: #212529 !important;
+}*/
+
+.title-table {
+  color: var(--app-text-muted)!important;
+  font-size: var(--app-font-sm)!important;
+}
+
+.txt-sm {
+  color: var(--app-text-secondary) !important;
+  font-size: var(--app-font-sm) !important;
+}
+
+.txt-md {
+  color: var(--app-text-primary) !important;
+  font-size: var(--app-font-md) !important;
+  font-weight: bold;
+}
+
+.txt-money {
+  color: var(--app-text-primary);
+  font-size: var(--app-font-md) !important;
+  font-weight: bold;
+}
+
+.txt-sm-padrao{
+  font-size: var(--app-font-sm) !important;
+}
+
 .layout {
   display: grid;
   grid-template-areas:
@@ -83,7 +132,7 @@
   grid-area: content;
   padding: 30px;
   /* background: #f1f5f9; */
-  background: white;
+  background: var(--app-bg-body);
   overflow-y: auto;
 }
 
@@ -103,16 +152,12 @@
 
 /* Estilos  para o card no dashboard */
 .icon-box {
-  width: 40px;
-  height: 40px;
+  width: 30px;
+  height: 30px;
   display: flex;
   align-items: center;
   justify-content: center;
   border-radius: 6px;
-}
-
-.fs-7 {
-  font-size: 0.875rem !important;
 }
 
 .card-size {
@@ -125,7 +170,7 @@
   font-size: 14px !important;
 }
 
-.cor-secundaria {
+.bg-card {
   /*background-color: #e2e8f0 !important;*/
-  background: #f1f5f9;
+  background: var(--app-bg-card) !important;
 }

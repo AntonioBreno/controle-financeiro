@@ -6,12 +6,11 @@
 
 {% block content %}
 
-<h2>Dashboard</h2>
-<p>Seja bem-vindo, {{ user.username }}!</p>
+<p class=" txt-md">Seja bem-vindo, {{ user.username }}!</p>
 
 <div class="d-flex justify-content-between flex-wrap ">
 
-  <div class="card border-0 card-size cor-secundaria">
+  <div class="card border-0 card-size bg-card">
     <div class="card-body ">
       <div class="d-flex gap-2 align-items-center mb-3">
 
@@ -19,21 +18,21 @@
           <i class="bi bi-currency-dollar"></i>
         </div>
         <div class="d-flex flex-column">
-          <h6 class="card-subtitle  text-body-secondary">Receita mensal</h6>
-          <h5 class="mb-0">{{ total_receita|moeda }}</h5>
+          <h6 class="card-subtitle txt-sm">Receita mensal</h6>
+          <h5 class="mb-0 txt-money">{{ total_receita|moeda }}</h5>
         </div>
 
       </div>
-      {% if percentual_receita < 0 %} <p class="card-subtitle text-body-secondary fs-7 text-danger">Redução de {{
+      {% if percentual_receita < 0 %} <p class="card-subtitle title-table  text-danger">Redução de {{
         percentual_receita }}% neste mes</p>
         {% else %}
-        <p class="card-subtitle text-body-secondary fs-7">Aumento de {{ percentual_receita }}% neste mes</p>
+        <p class="card-subtitle title-table">Aumento de {{ percentual_receita }}% neste mes</p>
         {% endif %}
 
     </div>
   </div>
 
-  <div class="card border-0 card-size cor-secundaria">
+  <div class="card border-0 card-size bg-card">
     <div class="card-body ">
       <div class="d-flex gap-2 align-items-center mb-3">
 
@@ -41,21 +40,21 @@
           <i class="bi bi-cart"></i>
         </div>
         <div class="d-flex flex-column">
-          <h6 class="card-subtitle  text-body-secondary">Dispesa mensal</h6>
-          <h5 class="mb-0">{{ total_despesa|moeda }}</h5>
+          <h6 class="card-subtitle  txt-sm">Dispesa mensal</h6>
+          <h5 class="mb-0 txt-money">{{ total_despesa|moeda }}</h5>
         </div>
 
       </div>
-      {% if percentual_despesa < 0 %} <p class="card-subtitle text-body-secondary fs-7 text-success">Redução de {{
+      {% if percentual_despesa < 0 %} <p class="card-subtitle title-table  text-success">Redução de {{
         percentual_despesa }}% neste mes</p>
         {% else %}
-        <p class="card-subtitle text-body-secondary fs-7 text-danger">Aumento de {{ percentual_despesa }}% neste mes</p>
+        <p class="card-subtitle title-table  text-danger">Aumento de {{ percentual_despesa }}% neste mes</p>
         {% endif %}
 
     </div>
   </div>
 
-  <div class="card border-0 card-size cor-secundaria">
+  <div class="card border-0 card-size bg-card">
     <div class="card-body ">
       <div class="d-flex gap-2 align-items-center mb-3">
 
@@ -63,21 +62,21 @@
           <i class="bi bi-piggy-bank"></i>
         </div>
         <div class="d-flex flex-column">
-          <h6 class="card-subtitle  text-body-secondary">Saldo</h6>
-          <h5 class="mb-0">{{ saldo|moeda }}</h5>
+          <h6 class="card-subtitle  txt-sm">Saldo</h6>
+          <h5 class="mb-0 txt-money">{{ saldo|moeda }}</h5>
         </div>
 
       </div>
-      {% if percentual_saldo < 0 %} <p class="card-subtitle text-body-secondary fs-7 text-danger">Redução de {{
+      {% if percentual_saldo < 0 %} <p class="card-subtitle title-table  text-danger">Redução de {{
         percentual_saldo }}% neste mes</p>
         {% else %}
-        <p class="card-subtitle text-body-secondary fs-7">Aumento de {{ percentual_saldo }}% neste mes</p>
+        <p class="card-subtitle title-table  text-success">Aumento de {{ percentual_saldo }}% neste mes</p>
         {% endif %}
 
     </div>
   </div>
 
-  <div class="card border-0 card-size cor-secundaria">
+  <div class="card border-0 card-size bg-card">
     <div class="card-body ">
       <div class="d-flex gap-2 align-items-center mb-3">
 
@@ -85,13 +84,13 @@
           <i class="bi bi-currency-dollar"></i>
         </div>
         <div class="d-flex flex-column">
-          <h6 class="card-subtitle  text-body-secondary">despesa x receita/ano</h6>
-          <h5 class="mb-0">R$1400 </h5>
+          <h6 class="card-subtitle  txt-sm">despesa x receita/ano</h6>
+          <h5 class="mb-0 txt-money">R$1400 </h5>
         </div>
 
       </div>
 
-      <p class="card-subtitle text-body-secondary fs-7">Aumento de 50% neste mes</p>
+      <p class="card-subtitle title-table  text-success">Aumento de 50% neste mes</p>
 
     </div>
   </div>
@@ -99,62 +98,101 @@
 </div>
 
 <div class="mt-3 ">
-  <form class="d-flex gap-3 align-items-center" method="POST">
-    {% csrf_token %}
-    <p>
-      <label for="descricao">Descrição:</label>
-      {{ form.descricao }}
-    </p>
-    <p>
-      <label for="valor">Valor:</label>
-      {{ form.valor }}
-    </p>
-    <p>
-      <label for="categoria">Categoria:</label>
-      {{ form.categoria }}
-    </p>
-    <p>
-      <label for="tipo">Tipo:</label>
-      {{ form.tipo }}
-    </p>
-    <button type="submit" class="btn btn-success " >Salvar</button>
-  </form>
+
 </div>
 
 <!-- Tabela personalizada -->
-<div class="table-responsive">
-    <table class="table table-borderless table-sm mb-0">
-        <thead class="text-white" style="background-color: #07b29b;"> <!-- Bootstrap verde escuro -->
-            <tr>
-              <th>Valor</th>
-              <th>Descrição</th>
-              <th>Categoria</th>
-              <th>Tipo</th>
-              <th>Data</th>
-            </tr>
-        </thead>
-        <tbody>
-            {% for transacao in transacao %}
-            <tr onclick="window.location.href='{% url 'transacao_detail' transacao.pk %}'" style="cursor: pointer;"
-                class="{% if forloop.counter|divisibleby:2 %}linha-verde{% else %}linha-branca{% endif %}"
-                title="Ver detalhes">
-                <td>{{ transacao.valor }}</td>
-                <td>{{ transacao.descricao }}</td>
-                <td>{{ transacao.categoria }}</td>
-                <td>{{ transacao.tipo }}</td>
-                <td>{{ transacao.data }}</td>
-            </tr>
-            {% empty %}
-            <tr>
-                <td colspan="5" class="text-center">Nenhuma transação localizada.</td>
-            </tr>
-            {% endfor %}
-        </tbody>
-    </table>
+<div class="table-responsive ">
+  <div class="d-flex justify-content-between align-items-center ">
+    <h2 class="mb-3 txt-md">Ultimas Transações</h2>
+    <div>
+
+      <button type="button" class="btn btn-success txt-sm-padrao" data-bs-toggle="modal" data-bs-target="#exampleModal">
+        Nova Transação
+      </button>
+
+      <!-- Modal -->
+      <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+          <div class="modal-content">
+            <div class="modal-header">
+              <h1 class="modal-title fs-5" id="exampleModalLabel">Nova Transação</h1>
+              <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <form class="d-flex gap-3 align-items-center" method="POST">
+              {% csrf_token %}
+              <div class="modal-body">
+                <p>
+                  <label for="descricao">Descrição:</label>
+                  {{ form.descricao }}
+                </p>
+                <p>
+                  <label for="valor">Valor:</label>
+                  {{ form.valor }}
+                </p>
+                <p>
+                  <label for="categoria">Categoria:</label>
+                  {{ form.categoria }}
+                </p>
+                <p>
+                  <label for="tipo">Tipo:</label>
+                  {{ form.tipo }}
+                </p>
+                <p>
+                  <label for="data">Data:</label>
+                  {{ form.data }}
+                </p>
+                <div class="modal-footer">
+                  <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+                  <button type="submit" class="btn btn-success">Salvar</button>
+                </div>
+
+              </div>
+            </form>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <table class="table table-borderless table-sm mb-0" style="table-layout: fixed !important;">
+    <thead class="text-white" style="background-color: #07b29b;"> <!-- Bootstrap verde escuro -->
+      <tr>
+        <th class="title-table">Valor</th>
+        <th class="title-table">Descrição</th>
+        <th class="title-table">Categoria</th>
+        <th class="title-table">Tipo</th>
+        <th class="title-table">Data</th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for transacao in transacao %}
+      <tr onclick="window.location.href='{% url 'transacao_detail' transacao.pk %}'" style="cursor: pointer;"
+        class="{% if forloop.counter|divisibleby:2 %}linha-verde{% else %}linha-branca{% endif %}" title="Ver detalhes">
+        <td class="txt-sm">{{ transacao.valor }}</td>
+        <td class="txt-sm">{{ transacao.descricao }}</td>
+        <td class="txt-sm">{{ transacao.categoria }}</td>
+        <td class="txt-sm">{{ transacao.tipo }}</td>
+        <td class="txt-sm">{{ transacao.data }}</td>
+      </tr>
+      {% empty %}
+      <tr>
+        <td colspan="5" class="text-center">Nenhuma transação localizada.</td>
+      </tr>
+      {% endfor %}
+    </tbody>
+  </table>
 </div>
 
 {% block scripts %}
+<script>
+  const myModal = document.getElementById('myModal')
+  const myInput = document.getElementById('myInput')
 
+  myModal.addEventListener('shown.bs.modal', () => {
+    myInput.focus()
+  })
+</script>
 
 {% endblock %}
 
