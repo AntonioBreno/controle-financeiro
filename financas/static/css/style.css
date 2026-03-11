@@ -174,3 +174,10 @@
   /*background-color: #e2e8f0 !important;*/
   background: var(--app-bg-card) !important;
 }
+
+.grafico-container {
+  background: var(--app-bg-card);
+  border-radius: 8px;
+  width: 60% !important;
+  height: 200px !important;
+}

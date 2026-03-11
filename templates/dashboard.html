@@ -99,7 +99,7 @@
 
 <!-- Gráfico -->
 
-<div class="mb-4 "style=" height: 250px;">
+<div class="mb-4 grafico-container" style=" height: 250px;">
   <canvas id="grafico-saldo">
 
   </canvas>
@@ -196,43 +196,56 @@
 <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 
 <script>
+  const rootStyles = getComputedStyle(document.documentElement);
+  const corSecudary = rootStyles.getPropertyValue('--app-text-secondary');
   const ctx = document.getElementById('grafico-saldo').getContext('2d');
 
   new Chart(ctx, {
-  type: 'line',
-  data: {
-    labels: {{ meses|safe }},
+    type: 'line',
+    data: {
+      labels: {{ meses| safe }},
     datasets: [{
       label: 'Saldo',
-      data: {{ saldo_mensal|safe }},
-      tension: 0.3
-    }]
+      data: {{ saldo_mensal| safe }},
+    tension: 0.3,
+    }],
+   
   },
-  options: {
+    options: { 
+    maintainAspectRatio: false,
     scales: {
       y: {
+        grid: { display: false },
         beginAtZero: true,
         ticks: {
-        callback: function(value) {
-          return 'R$ ' + value;
+          color: corSecudary,
+          callback: function (value) {
+            return 'R$ ' + value;
           }
-      }
+        }
+      },
+      x: {
+        grid: { display: false },
+        ticks: {
+          color: corSecudary
+        }
       }
     }
   }
 });
+
 </script>
 
 <script>
   document.addEventListener("DOMContentLoaded", function () {
-  const myModal = document.getElementById('exampleModal')
-  const myInput = document.getElementById('myInput')
+    const myModal = document.getElementById('exampleModal')
+    const myInput = document.getElementById('myInput')
 
-  myModal.addEventListener('shown.bs.modal', () => {
-    myInput.focus()
-  })
+    myModal.addEventListener('shown.bs.modal', () => {
+      myInput.focus()
+    })
 
-});
+  });
 </script>
 
 {% endblock %}
