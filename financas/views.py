@@ -1,4 +1,5 @@
 from datetime import date
+import json
 
 from django.db.models import Sum
 from django.contrib.auth.views import LoginView
@@ -28,9 +29,10 @@ class CustomLoginView(LoginView):
 @login_required
 def dashboard_view(request):
     
+    # tabela de transações recentes e formulário de nova transação
     transacao = Transacao.objects.filter(
         user=request.user
-    ).order_by('-id')
+    ).order_by('-id').order_by('-data')[:4]
     
     form = TransacaoForm(request.POST or None)
     
@@ -67,7 +69,8 @@ def dashboard_view(request):
     data__month=mes_anterior,
     data__year=ano_anterior
 )
-        
+    
+    # Cálculo dos totais e percentuais
     total_receita = transacoes.filter(tipo='receita').aggregate(Sum('valor'))['valor__sum'] or 0
     total_despesa = transacoes.filter(tipo='despesa').aggregate(Sum('valor'))['valor__sum'] or 0
     saldo = total_receita - total_despesa
@@ -85,6 +88,9 @@ def dashboard_view(request):
     percentual_despesa = calcular_percentual(total_despesa, despesa_anterior)
     percentual_saldo = calcular_percentual(saldo, saldo_anterior)
     
+    meses = ["Jan", "Fev", "Mar", "Abr", "Mai", "Jun", "Jul", "Ago", "Set", "Out", "Nov", "Dez" ]
+    saldo_mensal = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
+    
     context = {
         'form': form,
         'transacao': transacao,
@@ -93,7 +99,9 @@ def dashboard_view(request):
         'saldo': saldo,
         'percentual_receita': percentual_receita,
         'percentual_despesa': percentual_despesa,
-        'percentual_saldo': percentual_saldo,    
+        'percentual_saldo': percentual_saldo, 
+        "meses": json.dumps(meses),
+        "saldo_mensal": json.dumps(saldo_mensal)
     }
     return render(request, 'dashboard.html', context)
 
