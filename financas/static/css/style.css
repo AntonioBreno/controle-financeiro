@@ -175,9 +175,16 @@
   background: var(--app-bg-card) !important;
 }
 
-.grafico-container {
+.grafico-container-saldo {
   background: var(--app-bg-card);
   border-radius: 8px;
   width: 60% !important;
+  height: 200px !important;
+}
+
+.gafico-container-doughnut {
+  background: var(--app-bg-card);
+  border-radius: 8px;
+  width: 30% !important;
   height: 200px !important;
 }

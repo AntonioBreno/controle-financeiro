@@ -91,6 +91,12 @@ def dashboard_view(request):
     meses = ["Jan", "Fev", "Mar", "Abr", "Mai", "Jun", "Jul", "Ago", "Set", "Out", "Nov", "Dez" ]
     saldo_mensal = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
     
+    categorias = Transacao.objects.filter(tipo='despesa', user=request.user).values('categoria__nome').annotate(total=Sum('valor'))
+    
+    labels = [c['categoria__nome'] for c in categorias]
+    valores_categoria = [float(c['total']) for c in categorias]
+    
+    
     context = {
         'form': form,
         'transacao': transacao,
@@ -101,9 +107,13 @@ def dashboard_view(request):
         'percentual_despesa': percentual_despesa,
         'percentual_saldo': percentual_saldo, 
         "meses": json.dumps(meses),
-        "saldo_mensal": json.dumps(saldo_mensal)
+        "saldo_mensal": json.dumps(saldo_mensal),
+        "categorias": json.dumps(labels),
+        "valores_categoria": json.dumps(valores_categoria)
     }
     return render(request, 'dashboard.html', context)
+
+
 
 # CRUD de Categoria
 

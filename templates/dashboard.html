@@ -8,7 +8,7 @@
 
 <p class=" txt-md">Seja bem-vindo, {{ user.username }}!</p>
 
-<div class="d-flex justify-content-between flex-wrap ">
+<div class="d-flex justify-content-between flex-wrap mb-4">
 
   <div class="card border-0 card-size bg-card">
     <div class="card-body ">
@@ -98,14 +98,19 @@
 </div>
 
 <!-- Gráfico -->
+<div class="d-flex gap-4 ">
+  <div class="mb-4 grafico-container-saldo">
+    <canvas id="grafico-saldo">
 
-<div class="mb-4 grafico-container" style=" height: 250px;">
-  <canvas id="grafico-saldo">
+    </canvas>
+  </div>
 
-  </canvas>
+  <div class="gafico-container-doughnut">
+    <canvas id="grafico-categoria">
+
+    </canvas>
+  </div>
 </div>
-
-
 
 <!-- Tabela personalizada -->
 <div class="table-responsive ">
@@ -195,6 +200,7 @@
 <!-- Gráfico Chart.js -->
 <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 
+<!-- Gráfico saldo -->
 <script>
   const rootStyles = getComputedStyle(document.documentElement);
   const corSecudary = rootStyles.getPropertyValue('--app-text-secondary');
@@ -208,11 +214,19 @@
       label: 'Saldo',
       data: {{ saldo_mensal| safe }},
     tension: 0.3,
+    borderWidth: 1,
+    pointRadius: 0,
+    pointHoverRadius: 5
     }],
    
   },
-    options: { 
+    options: {
     maintainAspectRatio: false,
+    plugins: {
+      legend: {
+        display: false
+      }
+    },
     scales: {
       y: {
         grid: { display: false },
@@ -234,6 +248,41 @@
   }
 });
 
+</script>
+
+<!-- Gráfico Categoria -->
+
+<script>
+  const ctxCategoria = document.getElementById('grafico-categoria').getContext('2d');
+
+  new Chart(ctxCategoria, {
+    type: 'doughnut',
+    data: {
+      labels: {{ categorias| safe }},
+    datasets: [{
+      label: 'Categorias',
+      data: {{ valores_categoria| safe }},
+    backgroundColor: [
+      '#FF6384',
+      '#36A2EB',
+      '#FFCE56',
+      '#4BC0C0',
+      '#9966FF',
+      '#FF9F40'
+    ],
+    borderWidth: 1
+      }]
+    },
+    options: {
+    maintainAspectRatio: false,
+    cutout: '70%',
+    plugins: {
+      legend: {
+        position: 'bottom'
+      }
+    }
+  }
+  });
 </script>
 
 <script>
