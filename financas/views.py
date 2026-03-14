@@ -88,9 +88,37 @@ def dashboard_view(request):
     percentual_despesa = calcular_percentual(total_despesa, despesa_anterior)
     percentual_saldo = calcular_percentual(saldo, saldo_anterior)
     
+    #Grafico saldo mensal e diario
+    transacoes = Transacao.objects.all()
     meses = ["Jan", "Fev", "Mar", "Abr", "Mai", "Jun", "Jul", "Ago", "Set", "Out", "Nov", "Dez" ]
-    saldo_mensal = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
+    saldo_mensal = [0] * 12
     
+    
+    dias_mes = list(range(1, 32))
+    saldo_dias = [0] * 31
+    
+    #mes
+    for t in transacoes:
+
+        mes = t.data.month - 1   # janeiro = 0
+
+        if t.tipo == "receita":
+            saldo_mensal[mes] += float(t.valor)
+
+        else:
+            saldo_mensal[mes] -= float(t.valor)
+    
+    #dias do mes
+    for t in transacoes:
+
+        dia = t.data.day - 1
+
+        if t.tipo == "receita":
+            saldo_dias[dia] += float(t.valor)
+        else:
+            saldo_dias[dia] -= float(t.valor)
+    
+    #Grafico Categorias
     categorias = Transacao.objects.filter(tipo='despesa', user=request.user).values('categoria__nome').annotate(total=Sum('valor'))
     
     labels = [c['categoria__nome'] for c in categorias]
@@ -108,6 +136,8 @@ def dashboard_view(request):
         'percentual_saldo': percentual_saldo, 
         "meses": json.dumps(meses),
         "saldo_mensal": json.dumps(saldo_mensal),
+        'dias_mes': json.dumps(dias_mes),
+        'saldo_dias': json.dumps(saldo_dias),
         "categorias": json.dumps(labels),
         "valores_categoria": json.dumps(valores_categoria)
     }

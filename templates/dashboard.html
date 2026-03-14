@@ -98,18 +98,44 @@
 </div>
 
 <!-- Gráfico -->
-<div class="d-flex gap-4 ">
-  <div class="mb-4 grafico-container-saldo">
-    <canvas id="grafico-saldo">
+<div class="d-flex gap-4 mb-4">
 
-    </canvas>
+  <!-- Gráfico linha -->
+  <div class="mb-4 grafico-container-saldo flex-grow-1">
+
+    <div class="d-flex justify-content-end mb-2">
+      <div class="btn-group">
+        <button class="btn btn-secondary btn-sm dropdown-toggle"
+                type="button"
+                data-bs-toggle="dropdown">
+          Período
+        </button>
+
+        <ul class="dropdown-menu">
+          <li>
+            <button class="dropdown-item" onclick="mudarGrafico('mes')">
+              Por mês
+            </button>
+          </li>
+          <li>
+            <button class="dropdown-item" onclick="mudarGrafico('dia')">
+              Por dia
+            </button>
+          </li>
+        </ul>
+      </div>
+    </div>
+
+    <canvas id="grafico-saldo"></canvas>
+
   </div>
 
-  <div class="gafico-container-doughnut">
-    <canvas id="grafico-categoria">
 
-    </canvas>
+  <!-- Gráfico doughnut -->
+  <div class="grafico-container-doughnut">
+    <canvas id="grafico-categoria"></canvas>
   </div>
+
 </div>
 
 <!-- Tabela personalizada -->
@@ -204,15 +230,26 @@
 <script>
   const rootStyles = getComputedStyle(document.documentElement);
   const corSecudary = rootStyles.getPropertyValue('--app-text-secondary');
+
   const ctx = document.getElementById('grafico-saldo').getContext('2d');
 
-  new Chart(ctx, {
+  const dadosMes = {
+    labels: {{ meses|safe }},
+    data: {{ saldo_mensal|safe }}
+  }
+
+  const dadosDia = {
+    labels: {{ dias_mes|safe }},
+    data: {{ saldo_dias|safe }}
+  }
+
+  let grafico = new Chart(ctx, {
     type: 'line',
     data: {
-      labels: {{ meses| safe }},
+      labels: dadosMes.labels,
     datasets: [{
       label: 'Saldo',
-      data: {{ saldo_mensal| safe }},
+      data: dadosMes.data,
     tension: 0.3,
     borderWidth: 1,
     pointRadius: 0,
@@ -248,10 +285,25 @@
   }
 });
 
+// Função para alterar grafico saldo de mes para ano
+  function mudarGrafico(tipo){
+
+    if(tipo === "mes"){
+      grafico.data.labels = dadosMes.labels
+      grafico.data.datasets[0].data = dadosMes.data
+    }
+
+    if(tipo === "dia"){
+      grafico.data.labels = dadosDia.labels
+      grafico.data.datasets[0].data = dadosDia.data
+    }
+
+    grafico.update()
+}
+
 </script>
 
 <!-- Gráfico Categoria -->
-
 <script>
   const ctxCategoria = document.getElementById('grafico-categoria').getContext('2d');
 
@@ -278,12 +330,20 @@
     cutout: '70%',
     plugins: {
       legend: {
-        position: 'bottom'
+        position: 'bottom',
+        labels: {
+          boxWidth: 10,
+          boxHeight: 10,
+          font: {
+            size: 10
+          }
+        }
       }
     }
   }
   });
 </script>
+
 
 <script>
   document.addEventListener("DOMContentLoaded", function () {

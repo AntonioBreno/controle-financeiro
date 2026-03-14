@@ -182,9 +182,9 @@
   height: 200px !important;
 }
 
-.gafico-container-doughnut {
+.grafico-container-doughnut {
   background: var(--app-bg-card);
   border-radius: 8px;
-  width: 30% !important;
-  height: 200px !important;
+  width: 300px !important;
+  height: 250px !important;
 }
