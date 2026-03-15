@@ -6,7 +6,40 @@
 
 {% block content %}
 
-<p class=" txt-md">Bem-vindo {{ user.username }}!</p>
+<div class="d-flex justify-content-between">
+  <p class=" txt-md">Bem-vindo {{ user.username }}!</p>
+  <a href="/dashboard/">Hoje</a>
+
+  <div class=" filtro-mes">
+    <label> Período</label>
+    <form method="get">
+
+      <select name="mes" onchange="this.form.submit()">
+        <option value="1" {% if mes == 1 %}selected{% endif %}>Jan</option>
+        <option value="2" {% if mes == 2 %}selected{% endif %}>Fev</option>
+        <option value="3" {% if mes == 3 %}selected{% endif %}>Mar</option>
+        <option value="4" {% if mes == 4 %}selected{% endif %}>Abr</option>
+        <option value="5" {% if mes == 5 %}selected{% endif %}>Mai</option>
+        <option value="6" {% if mes == 6 %}selected{% endif %}>Jun</option>
+        <option value="7" {% if mes == 7 %}selected{% endif %}>Jul</option>
+        <option value="8" {% if mes == 8 %}selected{% endif %}>Ago</option>
+        <option value="9" {% if mes == 9 %}selected{% endif %}>Set</option>
+        <option value="10" {% if mes == 10 %}selected{% endif %}>Out</option>
+        <option value="11" {% if mes == 11 %}selected{% endif %}>Nov</option>
+        <option value="12" {% if mes == 12 %}selected{% endif %}>Dez</option>
+      </select>
+
+
+      <select name="ano" onchange="this.form.submit()">
+        <option value="2025" {% if ano == 2025 %}selected{% endif %}>2025</option>
+        <option value="2026" {% if ano == 2026 %}selected{% endif %}>2026</option>
+      </select>
+
+    </form>
+  </div>
+
+</div>
+
 
 <div class="d-flex justify-content-between flex-wrap mb-4">
 
@@ -78,9 +111,9 @@
 
   <div class="card border-0 card-size-grafico bg-card">
     <div class="card-body ">
-          <canvas id="grafico-ano" height="100px" >
+      <canvas id="grafico-ano" height="100px">
 
-          </canvas>
+      </canvas>
     </div>
   </div>
 
@@ -94,9 +127,7 @@
     <div class="d-flex justify-content-between mb-2 align-items-center">
       <p class="mb-0 txt-md">Evolução do saldo</p>
       <div class="btn-group">
-        <button class="btn btn-secondary btn-sm dropdown-toggle"
-                type="button"
-                data-bs-toggle="dropdown">
+        <button class="btn btn-secondary btn-sm dropdown-toggle" type="button" data-bs-toggle="dropdown">
           Período
         </button>
 
@@ -217,6 +248,7 @@
 
 <!-- Gráfico saldo -->
 <script>
+  
   const rootStyles = getComputedStyle(document.documentElement);
   const corSecudary = rootStyles.getPropertyValue('--app-text-secondary');
 
@@ -236,59 +268,59 @@
     type: 'line',
     data: {
       labels: dadosMes.labels,
-    datasets: [{
-      label: 'Saldo',
-      data: dadosMes.data,
-    tension: 0.1,
-    borderWidth: 1,
-    pointRadius: 0,
-    pointHoverRadius: 5
-    }],
-   
-  },
-    options: {
-    maintainAspectRatio: false,
-    plugins: {
-      legend: {
-        display: false
-      }
+      datasets: [{
+        label: 'Saldo',
+        data: dadosMes.data,
+        tension: 0.1,
+        borderWidth: 1,
+        pointRadius: 0,
+        pointHoverRadius: 5
+      }],
+
     },
-    scales: {
-      y: {
-        grid: { display: false },
-        beginAtZero: true,
-        ticks: {
-          color: corSecudary,
-          callback: function (value) {
-            return 'R$ ' + value;
-          }
+    options: {
+      maintainAspectRatio: false,
+      plugins: {
+        legend: {
+          display: false
         }
       },
-      x: {
-        grid: { display: false },
-        ticks: {
-          color: corSecudary
+      scales: {
+        y: {
+          grid: { display: false },
+          beginAtZero: true,
+          ticks: {
+            color: corSecudary,
+            callback: function (value) {
+              return 'R$ ' + value;
+            }
+          }
+        },
+        x: {
+          grid: { display: false },
+          ticks: {
+            color: corSecudary
+          }
         }
       }
     }
-  }
-});
+  });
 
-// Função para alterar grafico saldo de mes para ano
-  function mudarGrafico(tipo){
+  // Função para alterar grafico saldo de mes para ano
+  function mudarGrafico(tipo) {
 
-    if(tipo === "mes"){
+    if (tipo === "mes") {
       grafico.data.labels = dadosMes.labels
       grafico.data.datasets[0].data = dadosMes.data
     }
 
-    if(tipo === "dia"){
+    if (tipo === "dia") {
       grafico.data.labels = dadosDia.labels
       grafico.data.datasets[0].data = dadosDia.data
     }
 
     grafico.update()
-}
+  }
 
 </script>
 
@@ -337,18 +369,18 @@
   const ctxAno = document.getElementById('grafico-ano').getContext('2d');
 
   new Chart(ctxAno, {
-  type: 'bar',
-  data: {
-    labels: ['Receitas','Despesas'],
-    datasets: [{
-      data: [ {{ receita_ano }}, {{ despesa_ano }}],
-      backgroundColor: [
-        '#22c55e',
-        '#ef4444'
-      ]
-    }]
+    type: 'bar',
+    data: {
+      labels: ['Receitas', 'Despesas'],
+      datasets: [{
+        data: [{{ receita_ano }}, {{ despesa_ano }}],
+    backgroundColor: [
+      '#22c55e',
+      '#ef4444'
+    ]
+  }]
   },
-  options: {
+    options: {
     maintainAspectRatio: false,
     plugins: {
       legend: {

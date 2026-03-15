@@ -164,6 +164,7 @@ def dashboard_view(request):
     labels = [c['categoria__nome'] for c in categorias]
     valores_categoria = [float(c['total']) for c in categorias]
 
+    
 
     # Context
     context = {
@@ -177,6 +178,10 @@ def dashboard_view(request):
         'percentual_receita': percentual_receita,
         'percentual_despesa': percentual_despesa,
         'percentual_saldo': percentual_saldo,
+        
+        "mes": mes,
+        "ano": ano,
+        
 
         "meses": json.dumps(meses),
         "saldo_mensal": json.dumps(saldo_mensal),
