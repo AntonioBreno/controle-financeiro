@@ -28,149 +28,170 @@ class CustomLoginView(LoginView):
     
 @login_required
 def dashboard_view(request):
-    
-    # tabela de transações recentes e formulário de nova transação
-    transacao = Transacao.objects.filter(
-        user=request.user
-    ).order_by('-id', '-data')[:4]
-    
+
+    # Formulário de nova transação
     form = TransacaoForm(request.POST or None)
-    
+
     if request.method == "POST":
-        form = TransacaoForm(request.POST)
         if form.is_valid():
-            transacao = form.save(commit=False)
-            transacao.user = request.user
-            transacao.save()
+            nova_transacao = form.save(commit=False)
+            nova_transacao.user = request.user
+            nova_transacao.save()
             return redirect('dashboard')
-    else:
-        form = TransacaoForm()
-        
+
+
+    # Query base das transações do usuário
+    transacoes_user = Transacao.objects.filter(user=request.user)
+
+
+    # Transações recentes
+    transacoes_recentes = transacoes_user.order_by('-data', '-id')[:4]
+
+
+    # Mês e ano selecionados
     hoje = date.today()
-    
     mes = int(request.GET.get('mes', hoje.month))
     ano = int(request.GET.get('ano', hoje.year))
-    
-    # Totais do ano
-    receita_ano = Transacao.objects.filter(
-        user=request.user,
-        tipo='receita',
-        data__year=ano
-    ).aggregate(Sum('valor'))['valor__sum'] or 0
-    
 
-    despesa_ano = Transacao.objects.filter(
-        user=request.user,
-        tipo='despesa',
-        data__year=ano
-    ).aggregate(Sum('valor'))['valor__sum'] or 0
-        
+
+    # Transações filtradas
+    transacoes_ano = transacoes_user.filter(data__year=ano)
+    transacoes_mes = transacoes_user.filter(data__month=mes, data__year=ano)
+
+
+    # Totais do ano
+    receita_ano = (
+        transacoes_ano.filter(tipo='receita')
+        .aggregate(Sum('valor'))['valor__sum'] or 0
+    )
+
+    despesa_ano = (
+        transacoes_ano.filter(tipo='despesa')
+        .aggregate(Sum('valor'))['valor__sum'] or 0
+    )
+
+
+    # Mês anterior
     mes_anterior = mes - 1
     ano_anterior = ano
 
     if mes_anterior == 0:
         mes_anterior = 12
         ano_anterior -= 1
-        
-    transacoes = Transacao.objects.filter(
-        user=request.user,
-        data__month=mes,
-        data__year=ano
+
+    transacoes_mes_anterior = transacoes_user.filter(
+        data__month=mes_anterior,
+        data__year=ano_anterior
     )
-    
-    transacoes_anterior = Transacao.objects.filter(
-    user=request.user,
-    data__month=mes_anterior,
-    data__year=ano_anterior
-)
-    
-    # Cálculo dos totais e percentuais
-    total_receita = transacoes.filter(tipo='receita').aggregate(Sum('valor'))['valor__sum'] or 0
-    total_despesa = transacoes.filter(tipo='despesa').aggregate(Sum('valor'))['valor__sum'] or 0
+
+
+    # Totais do mês
+    total_receita = (
+        transacoes_mes.filter(tipo='receita')
+        .aggregate(Sum('valor'))['valor__sum'] or 0
+    )
+
+    total_despesa = (
+        transacoes_mes.filter(tipo='despesa')
+        .aggregate(Sum('valor'))['valor__sum'] or 0
+    )
+
     saldo = total_receita - total_despesa
-    
-    receita_anterior = transacoes_anterior.filter(tipo='receita').aggregate(Sum('valor'))['valor__sum'] or 0
-    despesa_anterior = transacoes_anterior.filter(tipo='despesa').aggregate(Sum('valor'))['valor__sum'] or 0
+
+
+    # Totais mês anterior
+    receita_anterior = (
+        transacoes_mes_anterior.filter(tipo='receita')
+        .aggregate(Sum('valor'))['valor__sum'] or 0
+    )
+
+    despesa_anterior = (
+        transacoes_mes_anterior.filter(tipo='despesa')
+        .aggregate(Sum('valor'))['valor__sum'] or 0
+    )
+
     saldo_anterior = receita_anterior - despesa_anterior
-    
-    
-    
+
+
+    # Cálculo percentual
     def calcular_percentual(atual, anterior):
         if anterior == 0:
             return 0
         return round(((atual - anterior) / anterior) * 100, 1)
 
+
     percentual_receita = calcular_percentual(total_receita, receita_anterior)
     percentual_despesa = calcular_percentual(total_despesa, despesa_anterior)
     percentual_saldo = calcular_percentual(saldo, saldo_anterior)
-    
-    #Grafico saldo ano
-    transacoes_ano = Transacao.objects.filter(
-    user=request.user,
-    data__year=ano
-    )
-    
-    transacoes_mes = Transacao.objects.filter(
-    user=request.user,
-    data__month=mes,
-    data__year=ano
-    )
-    
-    meses = ["Jan", "Fev", "Mar", "Abr", "Mai", "Jun", "Jul", "Ago", "Set", "Out", "Nov", "Dez" ]
+
+
+    # Dados gráfico mensal
+    meses = ["Jan", "Fev", "Mar", "Abr", "Mai", "Jun",
+             "Jul", "Ago", "Set", "Out", "Nov", "Dez"]
+
     saldo_mensal = [0] * 12
-    
-    
-    dias_mes = list(range(1, 32))
-    saldo_dias = [0] * 31
 
- # saldo mensal
     for t in transacoes_ano:
-
         mes_index = t.data.month - 1
 
         if t.tipo == "receita":
             saldo_mensal[mes_index] += float(t.valor)
         else:
             saldo_mensal[mes_index] -= float(t.valor)
-            
-    
-   # saldo diario
-    for t in transacoes_mes:
 
+
+    # Dados gráfico diário
+    dias_mes = list(range(1, 32))
+    saldo_dias = [0] * 31
+
+    for t in transacoes_mes:
         dia_index = t.data.day - 1
 
         if t.tipo == "receita":
             saldo_dias[dia_index] += float(t.valor)
         else:
             saldo_dias[dia_index] -= float(t.valor)
-    
-    #Grafico Categorias
-    categorias = Transacao.objects.filter(tipo='despesa', user=request.user).values('categoria__nome').annotate(total=Sum('valor'))
-    
+
+
+    # Despesas por categoria
+    categorias = (
+        transacoes_user
+        .filter(tipo='despesa')
+        .values('categoria__nome')
+        .annotate(total=Sum('valor'))
+    )
+
     labels = [c['categoria__nome'] for c in categorias]
     valores_categoria = [float(c['total']) for c in categorias]
-    
-    
+
+
+    # Context
     context = {
         'form': form,
-        'transacao': transacao,
+        'transacao': transacoes_recentes,
+
         'total_receita': total_receita,
         'total_despesa': total_despesa,
         'saldo': saldo,
+
         'percentual_receita': percentual_receita,
         'percentual_despesa': percentual_despesa,
-        'percentual_saldo': percentual_saldo, 
+        'percentual_saldo': percentual_saldo,
+
         "meses": json.dumps(meses),
         "saldo_mensal": json.dumps(saldo_mensal),
-        'dias_mes': json.dumps(dias_mes),
-        'saldo_dias': json.dumps(saldo_dias),
+
+        "dias_mes": json.dumps(dias_mes),
+        "saldo_dias": json.dumps(saldo_dias),
+
         "categorias": json.dumps(labels),
         "valores_categoria": json.dumps(valores_categoria),
+
         "receita_ano": json.dumps(float(receita_ano)),
         "despesa_ano": json.dumps(float(despesa_ano)),
     }
-    return render(request, 'dashboard.html', context)
 
+    return render(request, 'dashboard.html', context)
 
 
 # CRUD de Categoria
