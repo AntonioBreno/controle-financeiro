@@ -6,7 +6,7 @@
 
 {% block content %}
 
-<p class=" txt-md">Seja bem-vindo, {{ user.username }}!</p>
+<p class=" txt-md">Bem-vindo {{ user.username }}!</p>
 
 <div class="d-flex justify-content-between flex-wrap mb-4">
 
@@ -76,22 +76,11 @@
     </div>
   </div>
 
-  <div class="card border-0 card-size bg-card">
+  <div class="card border-0 card-size-grafico bg-card">
     <div class="card-body ">
-      <div class="d-flex gap-2 align-items-center mb-3">
+          <canvas id="grafico-ano" height="100px" >
 
-        <div class=" bg-success text-white icon-box">
-          <i class="bi bi-currency-dollar"></i>
-        </div>
-        <div class="d-flex flex-column">
-          <h6 class="card-subtitle  txt-sm">despesa x receita/ano</h6>
-          <h5 class="mb-0 txt-money">R$1400 </h5>
-        </div>
-
-      </div>
-
-      <p class="card-subtitle title-table  text-success">Aumento de 50% neste mes</p>
-
+          </canvas>
     </div>
   </div>
 
@@ -102,8 +91,8 @@
 
   <!-- Gráfico linha -->
   <div class="mb-4 grafico-container-saldo flex-grow-1">
-
-    <div class="d-flex justify-content-end mb-2">
+    <div class="d-flex justify-content-between mb-2 align-items-center">
+      <p class="mb-0 txt-md">Evolução do saldo</p>
       <div class="btn-group">
         <button class="btn btn-secondary btn-sm dropdown-toggle"
                 type="button"
@@ -250,7 +239,7 @@
     datasets: [{
       label: 'Saldo',
       data: dadosMes.data,
-    tension: 0.3,
+    tension: 0.1,
     borderWidth: 1,
     pointRadius: 0,
     pointHoverRadius: 5
@@ -344,6 +333,49 @@
   });
 </script>
 
+<script>
+  const ctxAno = document.getElementById('grafico-ano').getContext('2d');
+
+  new Chart(ctxAno, {
+  type: 'bar',
+  data: {
+    labels: ['Receitas','Despesas'],
+    datasets: [{
+      data: [ {{ receita_ano }}, {{ despesa_ano }}],
+      backgroundColor: [
+        '#22c55e',
+        '#ef4444'
+      ]
+    }]
+  },
+  options: {
+    maintainAspectRatio: false,
+    plugins: {
+      legend: {
+        display: false
+      }
+    },
+    scales: {
+      y: {
+        grid: { display: false },
+        beginAtZero: true,
+        ticks: {
+          color: corSecudary,
+          callback: function (value) {
+            return 'R$ ' + value;
+          }
+        }
+      },
+      x: {
+        grid: { display: false },
+        ticks: {
+          color: corSecudary
+        }
+      }
+    }
+  }
+});
+</script>
 
 <script>
   document.addEventListener("DOMContentLoaded", function () {

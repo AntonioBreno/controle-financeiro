@@ -32,7 +32,7 @@ def dashboard_view(request):
     # tabela de transações recentes e formulário de nova transação
     transacao = Transacao.objects.filter(
         user=request.user
-    ).order_by('-id').order_by('-data')[:4]
+    ).order_by('-id', '-data')[:4]
     
     form = TransacaoForm(request.POST or None)
     
@@ -47,10 +47,24 @@ def dashboard_view(request):
         form = TransacaoForm()
         
     hoje = date.today()
-        
+    
     mes = int(request.GET.get('mes', hoje.month))
     ano = int(request.GET.get('ano', hoje.year))
     
+    # Totais do ano
+    receita_ano = Transacao.objects.filter(
+        user=request.user,
+        tipo='receita',
+        data__year=ano
+    ).aggregate(Sum('valor'))['valor__sum'] or 0
+    
+
+    despesa_ano = Transacao.objects.filter(
+        user=request.user,
+        tipo='despesa',
+        data__year=ano
+    ).aggregate(Sum('valor'))['valor__sum'] or 0
+        
     mes_anterior = mes - 1
     ano_anterior = ano
 
@@ -79,6 +93,8 @@ def dashboard_view(request):
     despesa_anterior = transacoes_anterior.filter(tipo='despesa').aggregate(Sum('valor'))['valor__sum'] or 0
     saldo_anterior = receita_anterior - despesa_anterior
     
+    
+    
     def calcular_percentual(atual, anterior):
         if anterior == 0:
             return 0
@@ -88,35 +104,45 @@ def dashboard_view(request):
     percentual_despesa = calcular_percentual(total_despesa, despesa_anterior)
     percentual_saldo = calcular_percentual(saldo, saldo_anterior)
     
-    #Grafico saldo mensal e diario
-    transacoes = Transacao.objects.all()
+    #Grafico saldo ano
+    transacoes_ano = Transacao.objects.filter(
+    user=request.user,
+    data__year=ano
+    )
+    
+    transacoes_mes = Transacao.objects.filter(
+    user=request.user,
+    data__month=mes,
+    data__year=ano
+    )
+    
     meses = ["Jan", "Fev", "Mar", "Abr", "Mai", "Jun", "Jul", "Ago", "Set", "Out", "Nov", "Dez" ]
     saldo_mensal = [0] * 12
     
     
     dias_mes = list(range(1, 32))
     saldo_dias = [0] * 31
-    
-    #mes
-    for t in transacoes:
 
-        mes = t.data.month - 1   # janeiro = 0
+ # saldo mensal
+    for t in transacoes_ano:
 
-        if t.tipo == "receita":
-            saldo_mensal[mes] += float(t.valor)
-
-        else:
-            saldo_mensal[mes] -= float(t.valor)
-    
-    #dias do mes
-    for t in transacoes:
-
-        dia = t.data.day - 1
+        mes_index = t.data.month - 1
 
         if t.tipo == "receita":
-            saldo_dias[dia] += float(t.valor)
+            saldo_mensal[mes_index] += float(t.valor)
         else:
-            saldo_dias[dia] -= float(t.valor)
+            saldo_mensal[mes_index] -= float(t.valor)
+            
+    
+   # saldo diario
+    for t in transacoes_mes:
+
+        dia_index = t.data.day - 1
+
+        if t.tipo == "receita":
+            saldo_dias[dia_index] += float(t.valor)
+        else:
+            saldo_dias[dia_index] -= float(t.valor)
     
     #Grafico Categorias
     categorias = Transacao.objects.filter(tipo='despesa', user=request.user).values('categoria__nome').annotate(total=Sum('valor'))
@@ -139,7 +165,9 @@ def dashboard_view(request):
         'dias_mes': json.dumps(dias_mes),
         'saldo_dias': json.dumps(saldo_dias),
         "categorias": json.dumps(labels),
-        "valores_categoria": json.dumps(valores_categoria)
+        "valores_categoria": json.dumps(valores_categoria),
+        "receita_ano": json.dumps(float(receita_ano)),
+        "despesa_ano": json.dumps(float(despesa_ano)),
     }
     return render(request, 'dashboard.html', context)
 

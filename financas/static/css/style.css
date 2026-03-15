@@ -185,6 +185,32 @@
 .grafico-container-doughnut {
   background: var(--app-bg-card);
   border-radius: 8px;
-  width: 300px !important;
+  width: 350px !important;
   height: 250px !important;
+}
+
+.card-size-grafico {
+  width: 350px !important;
+  height: 100px ;
+}
+
+/* dropdown periodo no grafico saldo */
+.dropdown-menu {
+  background-color: transparent;
+  border: none;
+  box-shadow: none;
+}
+
+.dropdown-item {
+  color: var(--app-text-secondary);
+}
+
+.dropdown-item:hover {
+  background-color: rgba(255,255,255,0.05);
+}
+
+.btn-secondary {
+  background-color: transparent;
+  border: none;
+  color: var(--app-text-secondary);
 }
