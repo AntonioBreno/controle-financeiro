@@ -49,9 +49,21 @@ def dashboard_view(request):
 
 
     # Mês e ano selecionados
-    hoje = date.today()
-    mes = int(request.GET.get('mes', hoje.month))
-    ano = int(request.GET.get('ano', hoje.year))
+    data_str = request.GET.get('data')
+
+    if data_str:
+        ano, mes = map(int, data_str.split('-'))
+    else:
+        hoje = date.today()
+        mes = int(request.GET.get('mes', hoje.month))
+        ano = int(request.GET.get('ano', hoje.year))
+        
+    meses_pt = [
+            "", "Jan", "Fev", "Mar", "Abr", "Mai", "Jun",
+            "Jul", "Ago", "Set", "Out", "Nov", "Dez"
+        ]
+
+    nome_mes = meses_pt[mes]
 
 
     # Transações filtradas
@@ -123,6 +135,10 @@ def dashboard_view(request):
     percentual_receita = calcular_percentual(total_receita, receita_anterior)
     percentual_despesa = calcular_percentual(total_despesa, despesa_anterior)
     percentual_saldo = calcular_percentual(saldo, saldo_anterior)
+    
+    percentual_receita_formatado = abs(round(percentual_receita))
+    percentual_despesa_formatado = abs(round(percentual_despesa))
+    percentual_saldo_formatado = abs(round(percentual_saldo))
 
 
     # Dados gráfico mensal
@@ -175,11 +191,12 @@ def dashboard_view(request):
         'total_despesa': total_despesa,
         'saldo': saldo,
 
-        'percentual_receita': percentual_receita,
-        'percentual_despesa': percentual_despesa,
-        'percentual_saldo': percentual_saldo,
-        
+        'percentual_receita_formatado': percentual_receita_formatado,
+        'percentual_despesa_formatado': percentual_despesa_formatado,
+        'percentual_saldo_formatado': percentual_saldo_formatado,
+
         "mes": mes,
+        "nome_mes": nome_mes,
         "ano": ano,
         
 

@@ -214,3 +214,8 @@
   border: none;
   color: var(--app-text-secondary);
 }
+
+.filtro-mes{
+  position: relative;
+}
+

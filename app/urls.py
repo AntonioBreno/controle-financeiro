@@ -8,6 +8,7 @@ from financas.views import dashboard_view
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('financas/', include('financas.urls')),
+    path('', include('financas.urls')),  # ROTA RAIZ PARA O DASHBOARD
     
     
     path('dashboard/', dashboard_view, name='dashboard'),
