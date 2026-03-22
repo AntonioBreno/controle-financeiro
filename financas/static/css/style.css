@@ -18,6 +18,7 @@
   --app-bg-body:#fefefe;
   --bg-page: #F5F7F9;
   --app-bg-card: #fafafa;
+  --app-bg-card-teste: #f4f3f3;
 
 
 
@@ -130,7 +131,7 @@
 /* CONTENT */
 .content {
   grid-area: content;
-  padding: 30px;
+  padding: 20px;
   /* background: #f1f5f9; */
   background: var(--app-bg-body);
   overflow-y: auto;
@@ -172,22 +173,29 @@
 
 .bg-card {
   /*background-color: #e2e8f0 !important;*/
-  background: var(--app-bg-card) !important;
+  background: var(--app-bg-card-teste) !important;
 }
 
 .grafico-container-saldo {
-  background: var(--app-bg-card);
+  background: var(--app-bg-card-teste);
   border-radius: 8px;
   width: 60% !important;
-  height: 200px !important;
+  height: 250px !important;
 }
 
 .grafico-container-doughnut {
-  background: var(--app-bg-card);
+  background: var(--app-bg-card-teste);
   border-radius: 8px;
-  width: 350px !important;
+  width: 300px !important;
   height: 250px !important;
 }
+
+
+.grafico-box {
+  width: 100% !important;
+  height: 90% !important;
+}
+
 
 .card-size-grafico {
   width: 350px !important;
@@ -219,3 +227,15 @@
   position: relative;
 }
 
+.btn-verde-custom {
+  color: #0f5132;           /* verde escuro (texto) */
+  background-color: #d1e7dd; /* verde claro (fundo) */
+  border: 1px solid #badbcc;
+  font-weight: bold;
+  font-size: 12px !important;
+}
+
+.btn-verde-custom:hover {
+  background-color: #badbcc;
+  color: #0a3622;
+}

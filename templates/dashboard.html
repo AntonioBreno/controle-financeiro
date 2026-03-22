@@ -14,11 +14,11 @@
   <div class=" filtro-mes">
 
     <form method="get">
-      <a href="/dashboard/" class="btn btn-outline-primary btn-sm">
+      <a href="/dashboard/" class="btn btn-verde-custom btn-sm">
          Hoje
       </a>
       <!-- Botão visível -->
-      <button type="button" id="btnData" class="btn btn-outline-primary btn-sm">
+      <button type="button" id="btnData" class="btn btn-verde-custom btn-sm">
         📅 {{ nome_mes }} {{ ano }}
       </button>
     
@@ -101,23 +101,28 @@
     </div>
   </div>
 
-  <div class="card border-0 card-size-grafico bg-card">
-    <div class="card-body ">
-      <canvas id="grafico-ano" height="100px">
+  <div class="card border-0 card-size-grafico bg-card ">
+    <div class=" p-2" style="height: 100px;">
+       <div >
+          <p class="mb-0 txt-sm">Receitas x Despesas no ano</p>
+      </div>
 
-      </canvas>
+      <div class="grafico-box">
+        <canvas id="grafico-ano" ></canvas>
+      </div>
+      
     </div>
   </div>
 
 </div>
 
 <!-- Gráfico -->
-<div class="d-flex gap-4 mb-4">
+<div class="d-flex gap-4">
 
   <!-- Gráfico linha -->
-  <div class="mb-4 grafico-container-saldo flex-grow-1">
-    <div class="d-flex justify-content-between mb-2 align-items-center">
-      <p class="mb-0 txt-md">Evolução do saldo</p>
+  <div class=" grafico-container-saldo flex-grow-1 p-3">
+    <div class="d-flex justify-content-between align-items-center">
+      <p class="mb-2 txt-md">Evolução do saldo</p>
       <div class="btn-group">
         <button class="btn btn-secondary btn-sm dropdown-toggle" type="button" data-bs-toggle="dropdown">
           Período
@@ -138,25 +143,34 @@
       </div>
     </div>
 
-    <canvas id="grafico-saldo"></canvas>
+    <div class="grafico-box">
+      <canvas id="grafico-saldo"></canvas>
+    </div>
 
   </div>
 
 
   <!-- Gráfico doughnut -->
-  <div class="grafico-container-doughnut">
-    <canvas id="grafico-categoria"></canvas>
+  <div class="grafico-container-doughnut mb-4 p-3">
+    <div class="d-flex justify-content-center">
+      <p class="mb-2 txt-md">Despesas por categoria</p>
+    </div>
+
+    <div class="grafico-box">
+      <canvas id="grafico-categoria"></canvas>
+    </div>
+    
   </div>
 
 </div>
 
 <!-- Tabela personalizada -->
 <div class="table-responsive ">
-  <div class="d-flex justify-content-between align-items-center ">
-    <h2 class="mb-3 txt-md">Ultimas Transações</h2>
+  <div class="d-flex justify-content-between align-items-center mb-2">
+    <h2 class="mb-0 txt-md">Ultimas Transações</h2>
     <div>
 
-      <button type="button" class="btn btn-success txt-sm-padrao" data-bs-toggle="modal" data-bs-target="#exampleModal">
+      <button type="button" class="btn btn-verde-custom txt-sm-padrao" data-bs-toggle="modal" data-bs-target="#exampleModal">
         Nova Transação
       </button>
 
@@ -341,6 +355,7 @@
       }]
     },
     options: {
+    responsive: true,
     maintainAspectRatio: false,
     cutout: '70%',
     plugins: {
