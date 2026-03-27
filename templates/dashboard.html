@@ -219,7 +219,7 @@
   </div>
 
   <table class="table table-borderless table-sm mb-0" style="table-layout: fixed !important;">
-    <thead class="text-white" style="background-color: #07b29b;"> <!-- Bootstrap verde escuro -->
+    <thead class="text-white">
       <tr>
         <th class="title-table">Valor</th>
         <th class="title-table">Descrição</th>
@@ -231,7 +231,7 @@
     <tbody>
       {% for transacao in transacao %}
       <tr onclick="window.location.href='{% url 'transacao_detail' transacao.pk %}'" style="cursor: pointer;"
-        class="{% if forloop.counter|divisibleby:2 %}linha-verde{% else %}linha-branca{% endif %}" title="Ver detalhes">
+        title="Ver detalhes">
         <td class="txt-sm">{{ transacao.valor }}</td>
         <td class="txt-sm">{{ transacao.descricao }}</td>
         <td class="txt-sm">{{ transacao.categoria }}</td>

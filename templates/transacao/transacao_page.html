@@ -1,58 +1,125 @@
 {% extends 'base.html' %}
 
 {% block content %}
-<h2>Nova Transação</h2>
-<form method="POST">
-    {% csrf_token %}
-    <p>
-        <label for="tipo">Tipo:</label>
-        {{ form.tipo }}
-    </p>
-    <p>
-        <label for="categoria">Categoria:</label>
-        {{ form.categoria }}
-    </p>
-    <p>
-        <label for="descricao">Descrição:</label>
-        {{ form.descricao }}
-    </p>
-    <p>
-        <label for="valor">Valor:</label>
-        {{ form.valor }}
-    </p>
-    <p>
-        <label for="id_data">Data:</label>
-        {{ form.data }}
-    </p>
-    <button type="submit" class="btn btn-success">Salvar</button>
-</form>
+<div class="d-flex justify-content-between mb-4">
+    <h2 class="txt-md">Nova Transação</h2>
 
-<hr>
+    <button type="button" class="btn btn-verde-custom txt-sm-padrao" data-bs-toggle="modal"
+        data-bs-target="#exampleModal">
+        Nova Transação
+    </button>
 
-<h2>Lista de Transacoes</h2>
+    <!-- Modal -->
+    <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h1 class="modal-title fs-5" id="exampleModalLabel">Nova Transação</h1>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <form class="d-flex gap-3 align-items-center" method="POST">
+                    {% csrf_token %}
+                    <div class="modal-body">
+                        <p>
+                            <label for="descricao">Descrição:</label>
+                            {{ form.descricao }}
+                        </p>
+                        <p>
+                            <label for="valor">Valor:</label>
+                            {{ form.valor }}
+                        </p>
+                        <p>
+                            <label for="categoria">Categoria:</label>
+                            {{ form.categoria }}
+                        </p>
+                        <p>
+                            <label for="tipo">Tipo:</label>
+                            {{ form.tipo }}
+                        </p>
+                        <p>
+                            <label for="data">Data:</label>
+                            {{ form.data }}
+                        </p>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+                            <button type="submit" class="btn btn-success">Salvar</button>
+                        </div>
+
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="d-flex justify-content-start gap-4 mb-4">
+    <!-- Search form -->
+    <form method="get" >
+        <input type="text" name="q" class="form-control" placeholder="Buscar..." oninput="this.form.submit()">
+    </form>
+
+    <div class="btn-group ">
+        <button class="btn btn-secondary btn-sm dropdown-toggle" type="button" data-bs-toggle="dropdown"
+            aria-expanded="false">
+            Mes
+        </button>
+        <ul class="dropdown-menu">
+            ...
+        </ul>
+    </div>
+
+    <div class="btn-group">
+        <button class="btn btn-secondary btn-sm dropdown-toggle" type="button" data-bs-toggle="dropdown"
+            aria-expanded="false">
+            Tipo
+        </button>
+        <ul class="dropdown-menu">
+            ...
+        </ul>
+    </div>
+
+    <div class="btn-group">
+        <button class="btn btn-secondary btn-sm dropdown-toggle" type="button" data-bs-toggle="dropdown"
+            aria-expanded="false">
+            Categoria
+        </button>
+        <ul class="dropdown-menu">
+            ...
+        </ul>
+    </div>
+
+    <div class="btn-group">
+        <button class="btn btn-secondary btn-sm dropdown-toggle" type="button" data-bs-toggle="dropdown"
+            aria-expanded="false">
+            Ordernar por
+        </button>
+        <ul class="dropdown-menu">
+            ...
+        </ul>
+    </div>
+</div>
 
 <!-- Tabela personalizada -->
 <div class="table-responsive">
-    <table class="table table-borderless table-sm mb-0">
-        <thead class="text-white" style="background-color: #07b29b;"> <!-- Bootstrap verde escuro -->
+    <table class="table table-borderless table-sm mb-0" style="table-layout: fixed !important;">
+        <thead class="text-white">
             <tr>
-              <th>Valor</th>
-              <th>Descrição</th>
-              <th>Categoria</th>
-              <th>Tipo</th>
-              <th>Data</th>
+                <th class="title-table">Valor</th>
+                <th class="title-table">Descrição</th>
+                <th class="title-table">Categoria</th>
+                <th class="title-table">Tipo</th>
+                <th class="title-table">Data</th>
             </tr>
         </thead>
         <tbody>
             {% for transacao in transacao %}
             <tr onclick="window.location.href='{% url 'transacao_detail' transacao.pk %}'" style="cursor: pointer;"
-                class="{% if forloop.counter|divisibleby:2 %}linha-verde{% else %}linha-branca{% endif %}"
                 title="Ver detalhes">
-                <td>{{ transacao.valor }}</td>
-                <td>{{ transacao.descricao }}</td>
-                <td>{{ transacao.categoria }}</td>
-                <td>{{ transacao.tipo }}</td>
-                <td>{{ transacao.data }}</td>
+                <td class="txt-sm">{{ transacao.valor }}</td>
+                <td class="txt-sm">{{ transacao.descricao }}</td>
+                <td class="txt-sm">{{ transacao.categoria }}</td>
+                <td class="txt-sm">{{ transacao.tipo }}</td>
+                <td class="txt-sm">{{ transacao.data }}</td>
             </tr>
             {% empty %}
             <tr>
@@ -93,34 +160,34 @@
 
     document.addEventListener("DOMContentLoaded", function () {
 
-    let tipoSelect = document.getElementById("id_tipo")
-    let categoriaSelect = document.getElementById("id_categoria")
+        let tipoSelect = document.getElementById("id_tipo")
+        let categoriaSelect = document.getElementById("id_categoria")
 
-    tipoSelect.addEventListener("change", function () {
+        tipoSelect.addEventListener("change", function () {
 
-        let tipo = this.value
+            let tipo = this.value
 
-        fetch(`/financas/categorias/tipo/${tipo}/`)
-        .then(response => response.json())
-        .then(data => {
+            fetch(`/financas/categorias/tipo/${tipo}/`)
+                .then(response => response.json())
+                .then(data => {
 
-            categoriaSelect.innerHTML = ""
+                    categoriaSelect.innerHTML = ""
 
-            data.forEach(function(categoria){
+                    data.forEach(function (categoria) {
 
-                let option = document.createElement("option")
-                option.value = categoria.id
-                option.text = categoria.nome
+                        let option = document.createElement("option")
+                        option.value = categoria.id
+                        option.text = categoria.nome
 
-                categoriaSelect.appendChild(option)
+                        categoriaSelect.appendChild(option)
 
-            })
+                    })
+
+                })
 
         })
 
     })
-
-})
 
 
 </script>
